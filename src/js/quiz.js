@@ -1,5 +1,5 @@
 (function(){
-    var Q = VE.namespace('VE.apps.quiz');
+    var Q = VE.namespace('VE.modules.quiz');
     
     // quiz constructor
     Q.create = function(config){
