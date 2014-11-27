@@ -15,18 +15,61 @@
     };
 
     var createQuizFrame = function(){
-        this.resNode.innerHTML = '<h3 class="quiz-title">' + this.title + '</h3>' +
-                                '<div class="quiz-ques-container">' +
-                                '<p class="quiz-question">' + this.question+ '</p>' +
-                                '<input type="radio" name="radio" id="opt1"><label for="opt1" class="quiz-options">' + this.options[0] + '</label><br>' +
-                                '<input type="radio" name="radio" id="opt2"><label for="opt2" class="quiz-options">' + this.options[1] + '</label><br>' +
-                                '<input type="radio" name="radio" id="opt3"><label for="opt3" class="quiz-options">' + this.options[2] + '</label><br>' +
-                                '<input type="radio" name="radio" id="opt4"><label for="opt4" class="quiz-options">' + this.options[3] + '</label><br>' +
-                                '<input type="button" value="prev">' +
-                                '<input type="button" value="skip">' +
-                                '<input type="button" value="next">' +
-                                '</div>';
-    
+        // title
+        var title = document.createElement('h3');
+        title.className = 'quiz-title';
+        title.appendChild(document.createTextNode(this.title));
+        // question counter
+        var qCounter = document.createElement('span');
+        qCounter.className = 'counter';
+        qCounter.style.setProperty('float', 'right');
+        qCounter.appendChild(document.createTextNode(this.currQues + 1 + '/' + this.numQuestions));
+        title.appendChild(qCounter);
+        
+        // quiz container
+        var qContainer = document.createElement('div');
+        qContainer.className = 'quiz-ques-container';
+        
+        // question
+        var ques = document.createElement('p');
+        ques.className = 'quiz-question';
+        ques.appendChild(document.createTextNode(this.question));
+        qContainer.appendChild(ques);
+
+        // options
+        this.options.forEach(function(opt, index){
+            var prettyTitle = this.title.split(' ').join('-');
+            var radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'quiz-options';
+            radio.id = prettyTitle + '-opt-' + index;
+            qContainer.appendChild(radio);
+
+            var label = document.createElement('label');
+            label.setAttribute('for', prettyTitle + '-opt-' + index);
+            label.className = 'quiz-options';
+            label.appendChild(document.createTextNode(opt));
+            qContainer.appendChild(label);
+
+            qContainer.appendChild(document.createElement('br'));
+        }.bind(this));
+
+        // prev button
+        var prev = document.createElement('input');
+        prev.type = 'button';
+        prev.value = 'prev';
+        qContainer.appendChild(prev);
+
+        // next button
+        var next = document.createElement('input');
+        next.type = 'button';
+        next.value = 'next';
+        qContainer.appendChild(next);
+
+        this.resNode.innerHTML = '';
+        this.resNode.appendChild(title);
+        this.resNode.appendChild(qContainer);
+        
     };
 
     var refreshQuizFrame = function(){
@@ -41,20 +84,22 @@
             var radioGroup = document.querySelectorAll(this.config.queryStr + ' input[type=radio]');
             radioGroup[currAnswer].checked = true;
         }
+
+        // update counter
+        this.resNode.querySelector('.counter').innerHTML = this.currQues + 1 + '/' + this.numQuestions;
+
+        // update question
         this.resNode.querySelector('.quiz-question').innerHTML = '';
         this.resNode.querySelector('.quiz-question').appendChild(document.createTextNode(this.question));
 
-        this.resNode.querySelector('#opt1').nextSibling.innerHTML = '';
-        this.resNode.querySelector('#opt1').nextSibling.appendChild(document.createTextNode(this.options[0]));
-        
-        this.resNode.querySelector('#opt2').nextSibling.innerHTML = '';
-        this.resNode.querySelector('#opt2').nextSibling.appendChild(document.createTextNode(this.options[1]));
-        
-        this.resNode.querySelector('#opt3').nextSibling.innerHTML = '';
-        this.resNode.querySelector('#opt3').nextSibling.appendChild(document.createTextNode(this.options[2]));
-
-        this.resNode.querySelector('#opt4').nextSibling.innerHTML = '';
-        this.resNode.querySelector('#opt4').nextSibling.appendChild(document.createTextNode(this.options[3]));
+        // update options
+        var prettyTitle = this.title.split(' ').join('-');
+        this.options.forEach(function(opt, index){
+            var optNode = this.resNode.querySelector('#' + prettyTitle + '-opt-' + index);
+            optNode.nextSibling.innerHTML = '';
+            
+            optNode.nextSibling.appendChild(document.createTextNode(opt));
+        }.bind(this));
     };
 
     var recordUserSelection = function(){
