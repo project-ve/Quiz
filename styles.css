@@ -36,6 +36,10 @@
 
 .quiz-ques-container{
   padding: 25px;
+  -moz-box-sizing: border-box; /* Firefox */
+  box-sizing: border-box;
+  width: 80%;
+  float: left;
 }
 
 .quiz-question{
@@ -91,4 +95,20 @@
 
 .quiz-ques-container input[type="button"]:hover {
   cursor: pointer;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+}
+
+.aside-bar-container{
+  -moz-box-sizing: border-box; /* Firefox */
+  box-sizing: border-box;
+  width: 20%;
+  float: left;
+  padding: 25px;
+  max-height: 400px;
+  overflow: auto;
 }
