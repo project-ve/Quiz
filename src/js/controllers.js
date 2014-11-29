@@ -4,16 +4,14 @@
 
     // Aside Bar Question link click handler
     C.asideBarLinkClickHandler = function(e){
-        this.currQues = e.currentTarget.id;
-        QU.refresh.bind(this)();
+        QU.refresh.bind(this)(Number(e.currentTarget.id));
     };
 
     // Quiz previous button handler
     C.prevButtonHandler = function(){
         if(this.currQues > 0){
             QU.recordUserSelection.bind(this)();
-            this.currQues--;
-            QU.refresh.bind(this)();
+            QU.refresh.bind(this)(Number(this.currQues)-1);
         }
     }
 
@@ -21,8 +19,7 @@
     C.nextButtonHandler = function(){
         QU.recordUserSelection.bind(this)();
         if(this.currQues < this.numQuestions-1){
-            this.currQues++;
-            QU.refresh.bind(this)();
+            QU.refresh.bind(this)(Number(this.currQues)+1);
 
             // add new link if not already created
             var asideBarUl = this.resNode.querySelector(".side-bar");

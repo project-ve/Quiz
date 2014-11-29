@@ -19,7 +19,7 @@
 
         // Aside bar for quick links
         var asideBar = document.createElement('aside');
-        asideBar.className = 'aside-bar-container';
+        asideBar.className = 'side-bar-container';
         var asideTitle = document.createElement('p');
         asideTitle.appendChild(document.createTextNode('Quick Links'));
         asideBar.appendChild(asideTitle);
@@ -47,20 +47,24 @@
 
         // options
         this.options.forEach(function(opt, index){
+            // optDiv
+            var optDiv = document.createElement('div');
+            optDiv.className = 'quiz-options';
+            optDiv.addEventListener('click', function(){
+                this.querySelector('input').checked = true;
+            });
+
             var prettyTitle = this.title.split(' ').join('-');
             var radio = document.createElement('input');
             radio.type = 'radio';
             radio.name = 'quiz-options';
             radio.id = prettyTitle + '-opt-' + index;
-            qContainer.appendChild(radio);
+            optDiv.appendChild(radio);
 
-            var label = document.createElement('label');
-            label.setAttribute('for', prettyTitle + '-opt-' + index);
-            label.className = 'quiz-options';
-            label.appendChild(document.createTextNode(opt));
-            qContainer.appendChild(label);
-
-            qContainer.appendChild(document.createElement('br'));
+            var optText = document.createElement('span');
+            optText.appendChild(document.createTextNode(opt));
+            optDiv.appendChild(optText);
+            qContainer.appendChild(optDiv);
         }.bind(this));
 
         // prev button
@@ -83,7 +87,9 @@
         this.resNode.appendChild(div);   
     };
 
-    QU.refresh = function(){
+    QU.refresh = function(newCurrQues){
+        this.prevCurrQues = this.currQues;
+        this.currQues = newCurrQues;
         this.question = this.config.quiz.questions[this.currQues].question;
         this.options = this.config.quiz.questions[this.currQues].options;
         QU.refreshQuizFrame.bind(this)();
@@ -117,6 +123,13 @@
             
             optNode.nextSibling.appendChild(document.createTextNode(opt));
         }.bind(this));
+        
+        // add focus to curr question of side bar
+        // var asideBarList = this.resNode.querySelectorAll(".side-bar li");
+        // asideBarList[this.prevCurrQues].className = '';
+        // asideBarList[this.currQues].className = 'active-question';
+        
+        
     };
 
     QU.recordUserSelection = function(){
