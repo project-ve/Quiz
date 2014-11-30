@@ -26,12 +26,12 @@
 
         var asideBarUl = document.createElement('ul');
         asideBarUl.className = 'side-bar';
-        for(var i=0; i<1; i++){
-            var li = document.createElement('li');
-            li.id = i;
-            li.appendChild(document.createTextNode("Question: " + (i+1)));
-            asideBarUl.appendChild(li);
-        }
+        var li = document.createElement('li');
+        li.id = 0;
+        li.className = 'active-question';
+        li.appendChild(document.createTextNode("Question: 1"));
+        asideBarUl.appendChild(li);
+
         asideBar.appendChild(asideBarUl);
 
         // quiz container
@@ -52,8 +52,20 @@
             optDiv.className = 'quiz-options';
             optDiv.addEventListener('click', function(){
                 this.querySelector('input').checked = true;
+
+                var optDivGroup = this.parentElement.querySelectorAll('div');
+                [].forEach.call(optDivGroup, function(optDiv){
+                    optDiv.classList.remove('checked');
+                });
+                this.classList.add('checked');
             });
 
+            optDiv.addEventListener('click', function(){
+                // add focus to curr question of side bar
+                var asideBarList = this.resNode.querySelectorAll(".side-bar li");
+                asideBarList[this.currQues].classList.add('answered');
+            }.bind(this));
+                
             var prettyTitle = this.title.split(' ').join('-');
             var radio = document.createElement('input');
             radio.type = 'radio';
@@ -123,13 +135,6 @@
             
             optNode.nextSibling.appendChild(document.createTextNode(opt));
         }.bind(this));
-        
-        // add focus to curr question of side bar
-        // var asideBarList = this.resNode.querySelectorAll(".side-bar li");
-        // asideBarList[this.prevCurrQues].className = '';
-        // asideBarList[this.currQues].className = 'active-question';
-        
-        
     };
 
     QU.recordUserSelection = function(){
